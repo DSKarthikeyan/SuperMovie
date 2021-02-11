@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">SuperMovie</string>
+    <string name="text_add_to_cart">Add to cart</string>
+    <string name="text_Movie">Movie</string>
+    <string name="text_the_Movie">TheMovie</string>
+    <string name="text_db">DB</string>
+    <string name="text_language">Language</string>
+    <string name="text_title">Title</string>
+    <string name="text_genre">Genres</string>
+    <string name="text_vote">Votes</string>
+    <string name="text_category">Category</string>
+    <string name="text_description">Description</string>
+    <string name="text_status">Status</string>
+    <string name="text_try_again">Try again</string>
+    <string name="text_loading">Loading</string>
+    <string name="text_cart">Cart</string>
+    <string name="text_in_cart">In Cart</string>
+    <string name="text_remove_from_cart">Remove</string>
 </resources>
