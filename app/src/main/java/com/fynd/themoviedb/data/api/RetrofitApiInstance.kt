@@ -17,7 +17,7 @@ class RetrofitApiInstance {
             logging.setLevel(HttpLoggingInterceptor.Level.BODY)
             val client = OkHttpClient.Builder()
                 .addInterceptor(logging)
-                .addInterceptor(TokenInterceptor(APIConstants.API_KEY, Constants.LANGUAGE_US_ENG))
+                .addInterceptor(TokenInterceptor(APIConstants.API_KEY))
                 .build()
             Retrofit.Builder()
                 .baseUrl(APIConstants.BASE_URL)
@@ -33,12 +33,11 @@ class RetrofitApiInstance {
 }
 
 
-class TokenInterceptor(private val apiKey: String, private val language: String) : Interceptor {
+class TokenInterceptor(private val apiKey: String) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
         var original = chain.request()
         val url = original.url.newBuilder()
             .addQueryParameter(Constants.API_KEY, apiKey)
-            .addQueryParameter(Constants.LANGUAGE, language)
             .build()
         original = original.newBuilder().url(url).build()
         return chain.proceed(original)

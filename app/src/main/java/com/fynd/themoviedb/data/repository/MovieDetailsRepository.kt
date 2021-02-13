@@ -9,7 +9,7 @@ class MovieDetailsRepository(private val movieDetailsDatabase: MovieDatabase) {
     /**
      * fun: toGet Movie Details from server using Retrofit
      */
-    suspend fun getDiscoveredMovieDetails() = RetrofitApiInstance.movieRepoApi.getDiscoveredMovieDetails()
+    suspend fun getDiscoveredMovieDetails(currentLoadingPageKey:Int) = RetrofitApiInstance.movieRepoApi.getDiscoveredMovieDetails(currentLoadingPageKey)
 
 
     /**

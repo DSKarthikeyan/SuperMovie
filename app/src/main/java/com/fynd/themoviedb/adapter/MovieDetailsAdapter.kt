@@ -1,5 +1,6 @@
 package com.fynd.themoviedb.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +15,8 @@ import com.fynd.themoviedb.ui.MovieDetailsImpl
 import com.fynd.themoviedb.util.APIConstants
 
 class MovieDetailsAdapter(
-    private val recipeDetailsImpl: MovieDetailsImpl) :
-    RecyclerView.Adapter<MovieDetailsAdapter.CartListHolder>() {
+        private val recipeDetailsImpl: MovieDetailsImpl) :
+        RecyclerView.Adapter<MovieDetailsAdapter.CartListHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartListHolder {
         val binding = MovieDetailViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -27,10 +28,10 @@ class MovieDetailsAdapter(
         val itemViewHolder = holder as CartListHolder
         holder.itemView.apply {
             Glide.with(holder.itemView)
-                .asBitmap()
-                .load("${APIConstants.BASE_IMAGE_URL_API} ${currentList.poster_path}&api_key=${APIConstants.API_KEY}")
-                .into(itemViewHolder.viewBinding.imageViewMovie)
-
+                    .asBitmap()
+                    .load("${APIConstants.BASE_IMAGE_URL_w500_API}${currentList.poster_path}")
+                    .into(itemViewHolder.viewBinding.imageViewMovie)
+//            Log.d("DSK ", "${APIConstants.BASE_IMAGE_URL_w500_API}${currentList.poster_path}")
             itemViewHolder.viewBinding.textViewMovieTitle.text = currentList.title
             itemViewHolder.viewBinding.cardViewMovieDetails.setOnClickListener {
                 recipeDetailsImpl.clickListenerMovieDetailView(currentList)

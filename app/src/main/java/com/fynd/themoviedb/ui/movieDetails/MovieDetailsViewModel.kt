@@ -8,10 +8,16 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
+import androidx.paging.liveData
 import com.fynd.themoviedb.MovieDetailsApplication
+import com.fynd.themoviedb.data.api.MovieRepoApi
 import com.fynd.themoviedb.data.model.DiscoverMovieDetails
 import com.fynd.themoviedb.data.model.MovieDetails
 import com.fynd.themoviedb.data.repository.MovieDetailsRepository
+import com.fynd.themoviedb.data.repository.paging.PagingPostDataSource
 import com.fynd.themoviedb.util.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,6 +30,10 @@ class MovieDetailsViewModel (
 ) : AndroidViewModel(application) {
 
     val movieDetailsList: MutableLiveData<Resource<List<MovieDetails>>> = MutableLiveData()
+
+    val listData = Pager(PagingConfig(pageSize = 500)) {
+        PagingPostDataSource(recipeRepository)
+    }.liveData.cachedIn(viewModelScope)
 
     /**
      * fun: to get Trending Repo details from server
@@ -44,7 +54,7 @@ class MovieDetailsViewModel (
         try {
             if (hasInternetConnection()) {
                 movieDetailsList.postValue(Resource.Loading())
-                val response = recipeRepository.getDiscoveredMovieDetails()
+                val response = recipeRepository.getDiscoveredMovieDetails(1)
                 Log.d("DSK ","response $response")
                 movieDetailsList.postValue(handleRecipeResponse(response))
             } else {
