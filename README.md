@@ -11,7 +11,7 @@ https://github.com/DSKarthikeyan/SuperMovie.git
 ### Functionality
 
 1. List of Movies from the provided public API
-2. Handled loading state and error state.
+2. Paging 3 support and handled loading state and error state.
 3. Offline support. Once the data is fetched successfully from
    remote, it will stored locally.
 4. Kotlin language
@@ -52,6 +52,13 @@ dependencies {
 }
 ```
 
+for Paging Support
+
+```groovy
+//  Paging Library
+    def paging_version = "3.0.0-beta01"
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
+```
 
 ### Library
 
