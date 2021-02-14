@@ -1,4 +1,4 @@
-package com.fynd.themoviedb
+package com.dsk.themoviedb
 
 import android.app.Application
 

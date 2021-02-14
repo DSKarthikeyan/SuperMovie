@@ -1,22 +1,19 @@
-package com.fynd.themoviedb.adapter
+package com.dsk.themoviedb.adapter.movieDetails
 
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.fynd.themoviedb.R
-import com.fynd.themoviedb.data.model.MovieDetails
-import com.fynd.themoviedb.databinding.MovieDetailViewBinding
-import com.fynd.themoviedb.ui.MovieDetailsImpl
-import com.fynd.themoviedb.util.APIConstants
+import com.dsk.themoviedb.data.model.MovieDetails
+import com.dsk.themoviedb.databinding.MovieDetailViewBinding
+import com.dsk.themoviedb.ui.MovieDetailsImpl
+import com.dsk.themoviedb.util.APIConstants
 
-class MovieDetailsAdapter(
+class MovieDetailsNormalAdapter(
         private val recipeDetailsImpl: MovieDetailsImpl) :
-        RecyclerView.Adapter<MovieDetailsAdapter.CartListHolder>() {
+        RecyclerView.Adapter<MovieDetailsNormalAdapter.CartListHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartListHolder {
         val binding = MovieDetailViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -25,15 +22,14 @@ class MovieDetailsAdapter(
 
     override fun onBindViewHolder(holder: CartListHolder, position: Int) {
         val currentList = differ.currentList[position]
-        val itemViewHolder = holder as CartListHolder
         holder.itemView.apply {
+//            Log.d("DSK ", "${APIConstants.BASE_IMAGE_URL_w500_API}${currentList.poster_path}")
             Glide.with(holder.itemView)
                     .asBitmap()
                     .load("${APIConstants.BASE_IMAGE_URL_w500_API}${currentList.poster_path}")
-                    .into(itemViewHolder.viewBinding.imageViewMovie)
-//            Log.d("DSK ", "${APIConstants.BASE_IMAGE_URL_w500_API}${currentList.poster_path}")
-            itemViewHolder.viewBinding.textViewMovieTitle.text = currentList.title
-            itemViewHolder.viewBinding.cardViewMovieDetails.setOnClickListener {
+                    .into(holder.viewBinding.imageViewMovie)
+            holder.viewBinding.textViewMovieTitle.text = currentList.title
+            holder.viewBinding.cardViewMovieDetails.setOnClickListener {
                 recipeDetailsImpl.clickListenerMovieDetailView(currentList)
             }
         }

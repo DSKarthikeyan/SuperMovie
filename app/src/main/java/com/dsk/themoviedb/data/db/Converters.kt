@@ -1,7 +1,7 @@
-package com.fynd.themoviedb.data.db
+package com.dsk.themoviedb.data.db
 
 import androidx.room.TypeConverter
-import com.fynd.themoviedb.data.model.MovieDetails
+import com.dsk.themoviedb.data.model.MovieDetails
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 

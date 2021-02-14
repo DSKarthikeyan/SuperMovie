@@ -1,7 +1,6 @@
-package com.fynd.themoviedb.data.model
+package com.dsk.themoviedb.data.model
 
 import androidx.room.*
-import com.fynd.themoviedb.data.db.Converters
 
 @Entity(tableName = "discover-movie-details", indices = [Index(value = ["tableId"], unique = true)])
 data class DiscoverMovieDetails(

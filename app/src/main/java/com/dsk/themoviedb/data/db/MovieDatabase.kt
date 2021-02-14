@@ -1,21 +1,23 @@
-package com.fynd.themoviedb.data.db
+package com.dsk.themoviedb.data.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.fynd.themoviedb.data.model.DiscoverMovieDetails
-import com.fynd.themoviedb.data.model.MovieDetails
+import com.dsk.themoviedb.data.model.DiscoverMovieDetails
+import com.dsk.themoviedb.data.model.MovieDetails
+import com.dsk.themoviedb.data.model.RemoteKeys
 
 @Database(
-    entities = [DiscoverMovieDetails::class, MovieDetails::class],
+    entities = [DiscoverMovieDetails::class, MovieDetails::class,RemoteKeys::class],
     version = 1, exportSchema = false
 )
 @TypeConverters(Converters::class)
 abstract class MovieDatabase : RoomDatabase() {
 
     abstract fun getMovieDetailsDAO(): MoviesDAO
+    abstract fun getRemoteKeysDAO(): RemoteKeysDAO
 
     companion object {
         @Volatile
@@ -30,7 +32,7 @@ abstract class MovieDatabase : RoomDatabase() {
             Room.databaseBuilder(
                 context.applicationContext,
                 MovieDatabase::class.java,
-                "moviedetails.db"
+                "movie-details.db"
             ).build()
     }
 

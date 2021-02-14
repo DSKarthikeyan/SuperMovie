@@ -9,7 +9,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.fynd.TheMovieDB"
+        applicationId "com.dsk.TheMovieDB"
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
@@ -67,9 +67,12 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:4.5.0"
 
     // Room components
-    def room_version = "2.2.5"
-    implementation "android.arch.persistence.room:runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+//    def roomVersion = "2.2.5"
+//    for Paging Mediator Support need to use this or below version or else cursor error will occur
+    def roomVersion = "2.3.0-beta01"
+    implementation "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
 
     // Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:2.2.6"

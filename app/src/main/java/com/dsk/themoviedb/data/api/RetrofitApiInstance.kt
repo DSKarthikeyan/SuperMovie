@@ -1,11 +1,10 @@
-package com.fynd.themoviedb.data.api
+package com.dsk.themoviedb.data.api
 
-import com.fynd.themoviedb.util.APIConstants
-import com.fynd.themoviedb.util.Constants
+import com.dsk.themoviedb.util.APIConstants
+import com.dsk.themoviedb.util.Constants
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

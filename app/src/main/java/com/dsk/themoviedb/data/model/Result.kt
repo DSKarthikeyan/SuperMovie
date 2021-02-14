@@ -1,15 +1,9 @@
-package com.fynd.themoviedb.data.model
+package com.dsk.themoviedb.data.model
 
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "movie-details", indices = [Index(value = ["id"], unique = true)])
-data class MovieDetails(
+data class Result(
     val adult: Boolean,
     val backdrop_path: String,
     val genre_ids: List<Int>,
-    @PrimaryKey(autoGenerate = true)
     val id: Int,
     val original_language: String,
     val original_title: String,
@@ -19,6 +13,6 @@ data class MovieDetails(
     val release_date: String,
     val title: String,
     val video: Boolean,
-    val vote_average: Double,
+    val vote_average: Int,
     val vote_count: Int
 )

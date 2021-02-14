@@ -1,4 +1,4 @@
-package com.fynd.themoviedb.util
+package com.dsk.themoviedb.util
 
 sealed class Resource<T>(
     val data: T? = null,

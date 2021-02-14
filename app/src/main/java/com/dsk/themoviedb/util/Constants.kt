@@ -1,4 +1,4 @@
-package com.fynd.themoviedb.util
+package com.dsk.themoviedb.util
 
 class Constants {
     companion object{

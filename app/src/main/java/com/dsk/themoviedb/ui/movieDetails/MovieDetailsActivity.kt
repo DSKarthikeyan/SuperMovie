@@ -1,38 +1,36 @@
-package com.fynd.themoviedb.ui.movieDetails
+package com.dsk.themoviedb.ui.movieDetails
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.fynd.themoviedb.MovieDetailsApplication
-import com.fynd.themoviedb.R
-import com.fynd.themoviedb.adapter.LoadStateAdapterView
-import com.fynd.themoviedb.adapter.MainListAdapter
-import com.fynd.themoviedb.adapter.MovieDetailsAdapter
-import com.fynd.themoviedb.data.db.MovieDatabase
-import com.fynd.themoviedb.data.model.MovieDetails
-import com.fynd.themoviedb.data.repository.MovieDetailsRepository
-import com.fynd.themoviedb.databinding.ActivityMovieDetailsBinding
-import com.fynd.themoviedb.databinding.MovieDetailViewBinding
-import com.fynd.themoviedb.ui.MovieDetailsImpl
-import com.fynd.themoviedb.util.Resource
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.dsk.themoviedb.MovieDetailsApplication
+import com.dsk.themoviedb.R
+import com.dsk.themoviedb.adapter.LoadStateAdapterView
+import com.dsk.themoviedb.adapter.movieDetails.MovieDetailsPagingAdapter
+import com.dsk.themoviedb.adapter.movieDetails.MovieDetailsNormalAdapter
+import com.dsk.themoviedb.data.api.MovieRepoApi
+import com.dsk.themoviedb.data.db.MovieDatabase
+import com.dsk.themoviedb.data.model.MovieDetails
+import com.dsk.themoviedb.data.repository.MovieDetailsRepository
+import com.dsk.themoviedb.databinding.ActivityMovieDetailsBinding
+import com.dsk.themoviedb.ui.MovieDetailsImpl
+import kotlinx.coroutines.*
 
 class MovieDetailsActivity : AppCompatActivity(), MovieDetailsImpl {
 
     lateinit var movieDetailsViewModel: MovieDetailsViewModel
-    lateinit var movieDetailsListAdapter: MovieDetailsAdapter
-    lateinit var mainListAdapter: MainListAdapter
+    lateinit var movieDetailsListNormalAdapter: MovieDetailsNormalAdapter
+    lateinit var movieDetailsPagingAdapter: MovieDetailsPagingAdapter
 
     private lateinit var binding: ActivityMovieDetailsBinding
+    private var coroutineJob: Job? = null
 
+    @ExperimentalPagingApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMovieDetailsBinding.inflate(layoutInflater)
@@ -44,6 +42,7 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsImpl {
     /**
      * fun: initialize View Objects
      */
+    @ExperimentalPagingApi
     private fun initializeViews() {
         val movieDetailsDatabase = MovieDatabase(this)
         val recipeRepository = MovieDetailsRepository(movieDetailsDatabase)
@@ -51,10 +50,11 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsImpl {
             application as MovieDetailsApplication,
             recipeRepository
         )
-        movieDetailsViewModel =
-            ViewModelProvider(this, viewModelProviderFactory).get(MovieDetailsViewModel::class.java)
+        movieDetailsViewModel = ViewModelProvider(this, viewModelProviderFactory).get(MovieDetailsViewModel::class.java)
 
-        initTrendingRepoView()
+        lifecycleScope.launch {
+            initTrendingRepoView()
+        }
 
 //        buttonTryAgain.setOnClickListener { recipeViewModel.getRecipes() }
     }
@@ -62,11 +62,22 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsImpl {
     /**
      * fun: initialize and load Repo Details View
      */
-    private fun initTrendingRepoView() {
+    @ExperimentalPagingApi
+    private suspend fun initTrendingRepoView() {
         setupRecyclerView()
         movieDetailsViewModel.listData.observe(this@MovieDetailsActivity) {
-            GlobalScope.launch(Dispatchers.Main) { mainListAdapter.submitData(it) }
+            coroutineJob?.cancel()
+            coroutineJob = lifecycleScope.launch {
+                movieDetailsPagingAdapter.submitData(it)
+            }
         }
+
+//        movieDetailsViewModel.fetchMovieDetails().observe(this@MovieDetailsActivity, Observer {
+//            coroutineJob?.cancel()
+//            coroutineJob = lifecycleScope.launch {
+//                movieDetailsPagingAdapter.submitData(it)
+//            }
+//        })
     }
 
     /**
@@ -105,11 +116,11 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsImpl {
      * fun: setup Recycler View
      */
     private fun setupRecyclerView() {
-        mainListAdapter = MainListAdapter(this)
+        movieDetailsPagingAdapter = MovieDetailsPagingAdapter(this)
         binding.recyclerViewMovieDetails.apply {
-            adapter = mainListAdapter.withLoadStateHeaderAndFooter(
-                header = LoadStateAdapterView { mainListAdapter.retry() },
-                footer = LoadStateAdapterView { mainListAdapter.retry() }
+            adapter = movieDetailsPagingAdapter.withLoadStateHeaderAndFooter(
+                header = LoadStateAdapterView { movieDetailsPagingAdapter.retry() },
+                footer = LoadStateAdapterView { movieDetailsPagingAdapter.retry() }
             )
             setHasFixedSize(true)
             layoutManager = GridLayoutManager(this@MovieDetailsActivity, 2)
