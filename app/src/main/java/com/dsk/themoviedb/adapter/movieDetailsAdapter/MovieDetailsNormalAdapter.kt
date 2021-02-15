@@ -1,4 +1,4 @@
-package com.dsk.themoviedb.adapter.movieDetails
+package com.dsk.themoviedb.adapter.movieDetailsAdapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

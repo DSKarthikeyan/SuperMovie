@@ -2,13 +2,11 @@ package com.dsk.themoviedb.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.paging.*
-import com.dsk.themoviedb.data.api.MovieRepoApi
 import com.dsk.themoviedb.data.api.RetrofitApiInstance
 import com.dsk.themoviedb.data.api.RetrofitApiInstance.Companion.movieRepoApi
 import com.dsk.themoviedb.data.db.MovieDatabase
 import com.dsk.themoviedb.data.model.MovieDetails
 import com.dsk.themoviedb.data.repository.paging.PagingMovieMediator
-import kotlinx.coroutines.flow.Flow
 
 class MovieDetailsRepository(
     private val movieDetailsDatabase: MovieDatabase) {

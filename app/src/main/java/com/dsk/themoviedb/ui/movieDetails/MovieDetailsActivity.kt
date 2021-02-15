@@ -7,19 +7,21 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dsk.themoviedb.MovieDetailsApplication
 import com.dsk.themoviedb.R
 import com.dsk.themoviedb.adapter.LoadStateAdapterView
-import com.dsk.themoviedb.adapter.movieDetails.MovieDetailsPagingAdapter
-import com.dsk.themoviedb.adapter.movieDetails.MovieDetailsNormalAdapter
-import com.dsk.themoviedb.data.api.MovieRepoApi
+import com.dsk.themoviedb.adapter.movieDetailsAdapter.MovieDetailsPagingAdapter
+import com.dsk.themoviedb.adapter.movieDetailsAdapter.MovieDetailsNormalAdapter
 import com.dsk.themoviedb.data.db.MovieDatabase
 import com.dsk.themoviedb.data.model.MovieDetails
 import com.dsk.themoviedb.data.repository.MovieDetailsRepository
 import com.dsk.themoviedb.databinding.ActivityMovieDetailsBinding
 import com.dsk.themoviedb.ui.MovieDetailsImpl
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
 
 class MovieDetailsActivity : AppCompatActivity(), MovieDetailsImpl {
 
@@ -30,7 +32,7 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsImpl {
     private lateinit var binding: ActivityMovieDetailsBinding
     private var coroutineJob: Job? = null
 
-    @ExperimentalPagingApi
+//    @ExperimentalPagingApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMovieDetailsBinding.inflate(layoutInflater)
@@ -42,7 +44,7 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsImpl {
     /**
      * fun: initialize View Objects
      */
-    @ExperimentalPagingApi
+//    @ExperimentalPagingApi
     private fun initializeViews() {
         val movieDetailsDatabase = MovieDatabase(this)
         val recipeRepository = MovieDetailsRepository(movieDetailsDatabase)
@@ -62,7 +64,7 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsImpl {
     /**
      * fun: initialize and load Repo Details View
      */
-    @ExperimentalPagingApi
+//    @ExperimentalPagingApi
     private suspend fun initTrendingRepoView() {
         setupRecyclerView()
         movieDetailsViewModel.listData.observe(this@MovieDetailsActivity) {
@@ -72,7 +74,7 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsImpl {
             }
         }
 
-//        movieDetailsViewModel.fetchMovieDetails().observe(this@MovieDetailsActivity, Observer {
+//        movieDetailsViewModel.fetchMovieDetails().observe(this@MovieDetailsActivity, {
 //            coroutineJob?.cancel()
 //            coroutineJob = lifecycleScope.launch {
 //                movieDetailsPagingAdapter.submitData(it)

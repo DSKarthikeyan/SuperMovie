@@ -25,7 +25,7 @@ class MovieDetailsViewModel(
 
     private val movieDetailsList: MutableLiveData<Resource<List<MovieDetails>>> = MutableLiveData()
 
-    val listData : LiveData<PagingData<MovieDetails>> = getMovieListStream()
+    val listData: LiveData<PagingData<MovieDetails>> = getMovieListStream()
 
 //        .map { pagingData -> pagingData.map { MovieView.MovieItem(it) } }
 //        .map {
@@ -51,14 +51,13 @@ class MovieDetailsViewModel(
 //        }
 
     @ExperimentalPagingApi
-     fun fetchMovieDetails(): LiveData<PagingData<MovieDetails>> {
+    fun fetchMovieDetails(): LiveData<PagingData<MovieDetails>> {
         return recipeRepository.loadMovieDetailsDb().cachedIn(viewModelScope)
     }
 
-    private fun getMovieListStream() : LiveData<PagingData<MovieDetails>>{
-        return Pager(PagingConfig(pageSize = MovieDetailsRepository.DEFAULT_PAGE_SIZE)) {
-            PagingPostDataSource(recipeRepository)
-        }.liveData.cachedIn(viewModelScope)
+    private fun getMovieListStream(): LiveData<PagingData<MovieDetails>> {
+        return Pager(PagingConfig(pageSize = MovieDetailsRepository.DEFAULT_PAGE_SIZE))
+        { PagingPostDataSource(recipeRepository) }.liveData.cachedIn(viewModelScope)
     }
 
     /**
