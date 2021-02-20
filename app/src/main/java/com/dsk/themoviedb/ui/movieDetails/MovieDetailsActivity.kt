@@ -32,7 +32,7 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsImpl {
     private lateinit var binding: ActivityMovieDetailsBinding
     private var coroutineJob: Job? = null
 
-//    @ExperimentalPagingApi
+    @ExperimentalPagingApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMovieDetailsBinding.inflate(layoutInflater)
@@ -44,7 +44,7 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsImpl {
     /**
      * fun: initialize View Objects
      */
-//    @ExperimentalPagingApi
+    @ExperimentalPagingApi
     private fun initializeViews() {
         val movieDetailsDatabase = MovieDatabase(this)
         val recipeRepository = MovieDetailsRepository(movieDetailsDatabase)
@@ -64,22 +64,22 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsImpl {
     /**
      * fun: initialize and load Repo Details View
      */
-//    @ExperimentalPagingApi
+    @ExperimentalPagingApi
     private suspend fun initTrendingRepoView() {
         setupRecyclerView()
-        movieDetailsViewModel.listData.observe(this@MovieDetailsActivity) {
-            coroutineJob?.cancel()
-            coroutineJob = lifecycleScope.launch {
-                movieDetailsPagingAdapter.submitData(it)
-            }
-        }
-
-//        movieDetailsViewModel.fetchMovieDetails().observe(this@MovieDetailsActivity, {
+//        movieDetailsViewModel.listData.observe(this@MovieDetailsActivity) {
 //            coroutineJob?.cancel()
 //            coroutineJob = lifecycleScope.launch {
 //                movieDetailsPagingAdapter.submitData(it)
 //            }
-//        })
+//        }
+
+        movieDetailsViewModel.fetchMovieDetails().observe(this@MovieDetailsActivity, {
+            coroutineJob?.cancel()
+            coroutineJob = lifecycleScope.launch {
+                movieDetailsPagingAdapter.submitData(it)
+            }
+        })
     }
 
     /**

@@ -11,9 +11,9 @@ https://github.com/DSKarthikeyan/SuperMovie.git
 ### Functionality
 
 1. List of Movies from the provided public API
-2. Paging 3 support and handled loading state and error state.
+2. Paging 3 support with loading state and error state.
 3. Offline support. Once the data is fetched successfully from
-   remote, it will stored locally.
+   remote, it will stored locally and fetched using RemoteMediator Paging 3 Library.
 4. Kotlin language
 5. Dark and Light theme Support
 6. MVVM project structure.
