@@ -7,5 +7,9 @@ class Constants {
         var SORT_BY = "sort_by"
         var SORT_BY_POPULARITY = "popularity.desc"
         var LANGUAGE_US_ENG = "en-US"
+
+        const val DEFAULT_PAGE_INDEX = 1
+        const val DEFAULT_PAGE_SIZE = 500
+
     }
 }

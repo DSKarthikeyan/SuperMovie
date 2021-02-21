@@ -12,12 +12,15 @@ import com.dsk.themoviedb.data.model.DiscoverMovieDetails
 import com.dsk.themoviedb.data.model.MovieDetails
 import com.dsk.themoviedb.data.repository.MovieDetailsRepository
 import com.dsk.themoviedb.data.repository.paging.PagingPostDataSource
+import com.dsk.themoviedb.util.Constants
+import com.dsk.themoviedb.util.Constants.Companion.DEFAULT_PAGE_SIZE
 import com.dsk.themoviedb.util.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okio.IOException
 import retrofit2.Response
 
+@ExperimentalPagingApi
 class MovieDetailsViewModel(
     application: MovieDetailsApplication,
     private val recipeRepository: MovieDetailsRepository
@@ -25,7 +28,9 @@ class MovieDetailsViewModel(
 
     private val movieDetailsList: MutableLiveData<Resource<List<MovieDetails>>> = MutableLiveData()
 
-    val listData: LiveData<PagingData<MovieDetails>> = getMovieListStream()
+    var listData: LiveData<PagingData<MovieDetails>> = getMovieListStream()
+
+    private var listMovieMediatorData: LiveData<PagingData<MovieDetails>> = fetchMovieDetails()
 
 //        .map { pagingData -> pagingData.map { MovieView.MovieItem(it) } }
 //        .map {
@@ -50,13 +55,42 @@ class MovieDetailsViewModel(
 //            }
 //        }
 
-    @ExperimentalPagingApi
+
     fun fetchMovieDetails(): LiveData<PagingData<MovieDetails>> {
-        return recipeRepository.loadMovieDetailsDb().cachedIn(viewModelScope)
+        val lastResult = listMovieMediatorData
+        val newResult: LiveData<PagingData<MovieDetails>> = recipeRepository.loadMovieDetailsDb()
+//            .map { pagingData -> pagingData.map { MovieDetails.RepoItem(it) } }
+//            .map {
+//                it.insertSeparators<MovieDetails.RepoItem, MovieDetails> { before, after ->
+//                    if (after == null) {
+//                        // we're at the end of the list
+//                        return@insertSeparators null
+//                    }
+//
+//                    if (before == null) {
+//                        // we're at the beginning of the list
+//                        return@insertSeparators UiModel.SeparatorItem("${after.roundedStarCount}0.000+ stars")
+//                    }
+//                    // check between 2 items
+//                    if (before.roundedStarCount > after.roundedStarCount) {
+//                        if (after.roundedStarCount >= 1) {
+//                            UiModel.SeparatorItem("${after.roundedStarCount}0.000+ stars")
+//                        } else {
+//                            UiModel.SeparatorItem("< 10.000+ stars")
+//                        }
+//                    } else {
+//                        // no separator
+//                        null
+//                    }
+//                }
+//            }
+            .cachedIn(viewModelScope)
+        listMovieMediatorData = newResult
+        return newResult
     }
 
     private fun getMovieListStream(): LiveData<PagingData<MovieDetails>> {
-        return Pager(PagingConfig(pageSize = MovieDetailsRepository.DEFAULT_PAGE_SIZE))
+        return Pager(PagingConfig(pageSize = Constants.DEFAULT_PAGE_SIZE))
         { PagingPostDataSource(recipeRepository) }.liveData.cachedIn(viewModelScope)
     }
 

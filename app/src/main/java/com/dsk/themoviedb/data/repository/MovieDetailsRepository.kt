@@ -7,18 +7,10 @@ import com.dsk.themoviedb.data.api.RetrofitApiInstance.Companion.movieRepoApi
 import com.dsk.themoviedb.data.db.MovieDatabase
 import com.dsk.themoviedb.data.model.MovieDetails
 import com.dsk.themoviedb.data.repository.paging.PagingMovieMediator
+import com.dsk.themoviedb.util.Constants.Companion.DEFAULT_PAGE_SIZE
 
 class MovieDetailsRepository(
     private val movieDetailsDatabase: MovieDatabase) {
-
-    companion object {
-        const val DEFAULT_PAGE_INDEX = 1
-        const val DEFAULT_PAGE_SIZE = 500
-
-        //get doggo repository instance
-//        fun getInstance() = MovieDetailsRepository(movieDetailsDatabase)
-    }
-
     /**
      * let's define page size, page size is the only required param, rest is optional
      */
