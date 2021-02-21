@@ -66,12 +66,13 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsImpl {
      */
     private suspend fun initTrendingRepoView() {
         setupRecyclerView()
-        movieDetailsViewModel.listData.observe(this@MovieDetailsActivity) {
+
+        movieDetailsViewModel.fetchMovieDetails().observe(this@MovieDetailsActivity, {
             coroutineJob?.cancel()
             coroutineJob = lifecycleScope.launch {
                 movieDetailsPagingAdapter.submitData(it)
             }
-        }
+        })
 
     }
 

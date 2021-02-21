@@ -11,9 +11,6 @@ import com.dsk.themoviedb.MovieDetailsApplication
 import com.dsk.themoviedb.data.model.DiscoverMovieDetails
 import com.dsk.themoviedb.data.model.MovieDetails
 import com.dsk.themoviedb.data.repository.MovieDetailsRepository
-import com.dsk.themoviedb.data.repository.paging.PagingPostDataSource
-import com.dsk.themoviedb.util.Constants
-import com.dsk.themoviedb.util.Constants.Companion.DEFAULT_PAGE_SIZE
 import com.dsk.themoviedb.util.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,10 +25,7 @@ class MovieDetailsViewModel(
 
     private val movieDetailsList: MutableLiveData<Resource<List<MovieDetails>>> = MutableLiveData()
 
-    var listData: LiveData<PagingData<MovieDetails>> = getMovieListStream()
-
     private var listMovieMediatorData: LiveData<PagingData<MovieDetails>> = fetchMovieDetails()
-
 //        .map { pagingData -> pagingData.map { MovieView.MovieItem(it) } }
 //        .map {
 //            it.insertSeparators<MovieView.MovieItem, MovieView> { before, after ->
@@ -56,7 +50,7 @@ class MovieDetailsViewModel(
 //        }
 
 
-    fun fetchMovieDetails(): LiveData<PagingData<MovieDetails>> {
+     fun fetchMovieDetails(): LiveData<PagingData<MovieDetails>> {
         val lastResult = listMovieMediatorData
         val newResult: LiveData<PagingData<MovieDetails>> = recipeRepository.loadMovieDetailsDb()
 //            .map { pagingData -> pagingData.map { MovieDetails.RepoItem(it) } }
@@ -87,11 +81,6 @@ class MovieDetailsViewModel(
             .cachedIn(viewModelScope)
         listMovieMediatorData = newResult
         return newResult
-    }
-
-    private fun getMovieListStream(): LiveData<PagingData<MovieDetails>> {
-        return Pager(PagingConfig(pageSize = Constants.DEFAULT_PAGE_SIZE))
-        { PagingPostDataSource(recipeRepository) }.liveData.cachedIn(viewModelScope)
     }
 
     /**
