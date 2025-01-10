@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:name="com.dsk.themoviedb.MovieDetailsApplication"
         android:theme="@style/Theme.SuperMovie">
-        <activity android:name="com.dsk.themoviedb.ui.movieDetails.MovieDetailsActivity">
+        <activity android:name="com.dsk.themoviedb.ui.movieDetails.MovieDetailsActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
