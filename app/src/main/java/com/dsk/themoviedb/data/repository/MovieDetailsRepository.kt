@@ -6,7 +6,7 @@ import com.dsk.themoviedb.data.api.RetrofitApiInstance
 import com.dsk.themoviedb.data.api.RetrofitApiInstance.Companion.movieRepoApi
 import com.dsk.themoviedb.data.db.MovieDatabase
 import com.dsk.themoviedb.data.model.MovieDetails
-import com.dsk.themoviedb.data.repository.paging.PagingMovieMediator
+import com.dsk.themoviedb.data.repository.paging.PagingPostDataSource
 import com.dsk.themoviedb.util.Constants.Companion.DEFAULT_PAGE_SIZE
 
 class MovieDetailsRepository(
@@ -25,7 +25,6 @@ class MovieDetailsRepository(
         return Pager(
             config = pagingConfig,
             pagingSourceFactory = pagingSourceFactory,
-            remoteMediator = PagingMovieMediator(movieRepoApi, movieDetailsDatabase)
         ).liveData
     }
 
