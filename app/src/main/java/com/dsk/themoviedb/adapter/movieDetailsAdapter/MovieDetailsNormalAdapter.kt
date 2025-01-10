@@ -51,5 +51,5 @@ class MovieDetailsNormalAdapter(
         }
     }
 
-    val differ = AsyncListDiffer(this, differCallback)
+    private val differ = AsyncListDiffer(this, differCallback)
 }

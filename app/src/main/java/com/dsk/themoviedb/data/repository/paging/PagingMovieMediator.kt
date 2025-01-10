@@ -40,57 +40,59 @@ class PagingMovieMediator(
 //                    throw InvalidObjectException("Remote key and the prevKey should not be null")
                 }
                 // If the previous key is null, then we can't request more data
-                val prevKey = remoteKeys?.prevKey
-                if (prevKey == null) {
-                    return MediatorResult.Success(endOfPaginationReached = true)
-                }
-                remoteKeys.prevKey
+                val prevKey = remoteKeys?.prevKey ?: return MediatorResult.Success(endOfPaginationReached = true)
+                prevKey
             }
             LoadType.APPEND -> {
                 val remoteKeys = getRemoteKeyForLastItem(state)
-                if (remoteKeys == null || remoteKeys.nextKey == null) {
-                    throw InvalidObjectException("Remote key should not be null for $loadType")
+                if (remoteKeys?.nextKey == null) {
+//                    throw InvalidObjectException("Remote key should not be null for $loadType")
                 }
-                remoteKeys.nextKey
+                remoteKeys?.nextKey
             }
 
         }
 
 //        val apiQuery = query + IN_QUALIFIER
 
-        try {
-            val apiResponse = movieRepoApiService.getDiscoveredMovieDetails(page)
+            if(page != null) {
+                try {
+                    val apiResponse = movieRepoApiService.getDiscoveredMovieDetails(page)
 
-            val repos = apiResponse.body()?.results
-            val endOfPaginationReached = repos?.isEmpty()
-            movieDatabase.withTransaction {
-                // clear all tables in the database
-                if (loadType == LoadType.REFRESH) {
-                    movieDatabase.getRemoteKeysDAO().clearRemoteKeys()
-                    movieDatabase.getMovieDetailsDAO().clearAllMovieDetails()
+                    val repos = apiResponse.body()?.results
+                    val endOfPaginationReached = repos!!.isEmpty()
+                    movieDatabase.withTransaction {
+                        // clear all tables in the database
+                        if (loadType == LoadType.REFRESH) {
+                            movieDatabase.getRemoteKeysDAO().clearRemoteKeys()
+                            movieDatabase.getMovieDetailsDAO().clearAllMovieDetails()
+                        }
+                        val prevKey =
+                            if (page == Constants.DEFAULT_PAGE_INDEX) null else page.minus(1)
+                        val nextKey = if (endOfPaginationReached) null else page.plus(1)
+                        val keys = repos.map {
+                            RemoteKeys(id = it.id, prevKey = prevKey, nextKey = nextKey)
+                        }
+                        if (keys != null) {
+                            movieDatabase.getRemoteKeysDAO().insertAll(keys)
+                        }
+                        if (repos != null) {
+                            movieDatabase.getMovieDetailsDAO().upsert(repos)
+                        }
+                    }
+//            return if(endOfPaginationReached!=null) {
+                    return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
+//            }else{
+//                MediatorResult.Success(endOfPaginationReached = true)
+//            }
+                } catch (exception: IOException) {
+                    return MediatorResult.Error(exception)
+                } catch (exception: HttpException) {
+                    return MediatorResult.Error(exception)
                 }
-                val prevKey = if (page == Constants.DEFAULT_PAGE_INDEX) null else page - 1
-                val nextKey = if (endOfPaginationReached == true) null else page + 1
-                val keys = repos?.map {
-                    RemoteKeys(id = it.id, prevKey = prevKey, nextKey = nextKey)
-                }
-                if (keys != null) {
-                    movieDatabase.getRemoteKeysDAO().insertAll(keys)
-                }
-                if (repos != null) {
-                    movieDatabase.getMovieDetailsDAO().upsert(repos)
-                }
+            } else {
+                return MediatorResult.Error(throw UnsupportedOperationException())
             }
-            if(endOfPaginationReached!=null) {
-                return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached!!)
-            }else{
-                return MediatorResult.Success(endOfPaginationReached = true)
-            }
-        } catch (exception: IOException) {
-            return MediatorResult.Error(exception)
-        } catch (exception: HttpException) {
-            return MediatorResult.Error(exception)
-        }
     }
 
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, MovieDetails>): RemoteKeys? {

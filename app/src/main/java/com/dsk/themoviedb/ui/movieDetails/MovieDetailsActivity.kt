@@ -3,11 +3,9 @@ package com.dsk.themoviedb.ui.movieDetails
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dsk.themoviedb.MovieDetailsApplication
 import com.dsk.themoviedb.R
@@ -20,16 +18,14 @@ import com.dsk.themoviedb.data.repository.MovieDetailsRepository
 import com.dsk.themoviedb.databinding.ActivityMovieDetailsBinding
 import com.dsk.themoviedb.ui.MovieDetailsImpl
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.distinctUntilChangedBy
-import kotlinx.coroutines.flow.filter
 
 @ExperimentalPagingApi
 @InternalCoroutinesApi
 class MovieDetailsActivity : AppCompatActivity(), MovieDetailsImpl {
 
-    lateinit var movieDetailsViewModel: MovieDetailsViewModel
+    private lateinit var movieDetailsViewModel: MovieDetailsViewModel
     lateinit var movieDetailsListNormalAdapter: MovieDetailsNormalAdapter
-    lateinit var movieDetailsPagingAdapter: MovieDetailsPagingAdapter
+    private lateinit var movieDetailsPagingAdapter: MovieDetailsPagingAdapter
 
     private lateinit var binding: ActivityMovieDetailsBinding
     private var coroutineJob: Job? = null
@@ -67,12 +63,12 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsImpl {
     private suspend fun initTrendingRepoView() {
         setupRecyclerView()
 
-        movieDetailsViewModel.fetchMovieDetails().observe(this@MovieDetailsActivity, {
+        movieDetailsViewModel.fetchMovieDetails().observe(this@MovieDetailsActivity) {
             coroutineJob?.cancel()
             coroutineJob = lifecycleScope.launch {
                 movieDetailsPagingAdapter.submitData(it)
             }
-        })
+        }
 
     }
 
@@ -131,11 +127,5 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsImpl {
         }
     }
 
-//    /** Called when the user taps the Send button */
-//    private fun openCartDetailsActivity() {
-//        val intent = Intent(this, CartDetailsActivity::class.java)
-//        startActivity(intent)
-//        finish()
-//    }
 
 }

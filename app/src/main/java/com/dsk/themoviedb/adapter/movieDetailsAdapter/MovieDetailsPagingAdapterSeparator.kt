@@ -62,7 +62,7 @@ class MovieDetailsPagingAdapterSeparator(private val recipeDetailsImpl: MovieDet
                     parent,
                     false
                 )
-                return ViewHolder(binding)
+                ViewHolder(binding)
             }
             else -> {
                 val binding = ItemSeperatorViewBinding.inflate(
@@ -70,7 +70,7 @@ class MovieDetailsPagingAdapterSeparator(private val recipeDetailsImpl: MovieDet
                     parent,
                     false
                 )
-                return MovieSeparatorViewHolder(binding)
+                MovieSeparatorViewHolder(binding)
             }
         }
     }

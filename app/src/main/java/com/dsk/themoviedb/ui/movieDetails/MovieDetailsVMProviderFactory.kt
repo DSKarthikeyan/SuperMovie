@@ -12,7 +12,7 @@ class MovieDetailsVMProviderFactory(
 ) :
     ViewModelProvider.Factory {
     @ExperimentalPagingApi
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         return MovieDetailsViewModel(application,movieRepository) as T
     }

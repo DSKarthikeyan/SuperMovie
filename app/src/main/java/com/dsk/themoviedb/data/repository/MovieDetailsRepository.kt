@@ -20,7 +20,6 @@ class MovieDetailsRepository(
 
     @ExperimentalPagingApi
     fun loadMovieDetailsDb(pagingConfig: PagingConfig = getDefaultPageConfig()): LiveData<PagingData<MovieDetails>> {
-        if (movieDetailsDatabase == null) throw IllegalStateException("Database is not initialized")
         val pagingSourceFactory = { movieDetailsDatabase.getMovieDetailsDAO().getAllMovieDetails() }
         return Pager(
             config = pagingConfig,
@@ -32,7 +31,7 @@ class MovieDetailsRepository(
     /**
      * fun: toGet Movie Details from server using Retrofit
      */
-    suspend fun getDiscoveredMovieDetails(currentLoadingPageKey:Int) = RetrofitApiInstance.movieRepoApi.getDiscoveredMovieDetails(currentLoadingPageKey)
+    suspend fun getDiscoveredMovieDetails(currentLoadingPageKey:Int) = movieRepoApi.getDiscoveredMovieDetails(currentLoadingPageKey)
 
 
     /**

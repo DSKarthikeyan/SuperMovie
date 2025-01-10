@@ -12,7 +12,7 @@ import com.dsk.themoviedb.ui.MovieDetailsImpl
 import com.dsk.themoviedb.util.APIConstants
 
 class MovieDetailsPagingAdapter(private val recipeDetailsImpl: MovieDetailsImpl)
-    : PagingDataAdapter<MovieDetails, MovieDetailsPagingAdapter.ViewHolder>(DataDifferntiator) {
+    : PagingDataAdapter<MovieDetails, MovieDetailsPagingAdapter.ViewHolder>(DataDifferentiator) {
 
     class ViewHolder(var viewBinding: MovieDetailViewBinding) : RecyclerView.ViewHolder(viewBinding.root)
 
@@ -36,7 +36,7 @@ class MovieDetailsPagingAdapter(private val recipeDetailsImpl: MovieDetailsImpl)
     }
 
 
-    object DataDifferntiator : DiffUtil.ItemCallback<MovieDetails>() {
+    object DataDifferentiator : DiffUtil.ItemCallback<MovieDetails>() {
 
         override fun areItemsTheSame(oldItem: MovieDetails, newItem: MovieDetails): Boolean {
             return oldItem.id == newItem.id
